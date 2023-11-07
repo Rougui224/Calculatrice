@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(value >="0" && value <="9"){
                     // ici on dit tant on a pas encore appuyer sur l'operateur alors le premier nombre est celui qu'on a cliqué dessus
                     if(operator===''){
-                        firsNumber+=value
+                        firsNumber+=(value)*1
                         screen.textContent= firsNumber
                     }else{
                         secondNumber+= value
@@ -67,18 +67,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 // on trouve l'operateur
                 else if(value==='+' || value==='-' || value==='*' || value==='/' ){
-                    operator=value
+                   
                     if(firsNumber !=='' && secondNumber !==''){
                         // on stock le calcul dans la premiere variable et on reinitialise les autres, pourque l'utilisateur puisse faire des calcul à l'infini
                         firsNumber=calculate(firsNumber,operator,secondNumber)
-                        screen.textContent= firsNumber
-                      
+                        // on affiche le resultat
+                        screen.textContent= firsNumber                      
                         secondNumber=''
                        
                     }
-                   
-
-                
+                    operator = value
+                                   
                 }else if(value ='='){
                     // on verifie si l'utilisateur a bien entré les deux nombres
                     if(firsNumber !=='' && secondNumber !==''){
