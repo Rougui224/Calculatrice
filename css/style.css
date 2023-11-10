@@ -14,7 +14,7 @@ body {
 
 .calculator {
     width: 265px;
-    height: 332px;
+    height: 400px;
     margin: auto;
     background-color: silver;
     display: flex;
@@ -24,7 +24,7 @@ body {
 
 #screen{
     background-color: white;
-    height: 70px;
+    height: 80px;
     font-size: 30px;
     padding: 10px;
     padding-bottom: 0px;
@@ -66,6 +66,11 @@ button {
 .clear:active {
     background-color: white;
 }
+.op {
+    background-color:rgb(18 18 17);
+    color: white;
+
+}
 .operator {
     background-color: rgb(250, 169, 70);
 }
@@ -76,7 +81,7 @@ button {
     background-color: green;
 }
 
-@media all and ( max-width:757px) {
+@media all and ( max-width:457px) {
     .calculator{
          width: 100%;
          height: 100vh; 
@@ -86,14 +91,14 @@ button {
 
     }
     #screen {
-        height: 35%;
+        height: 27%;
         background: #000;
         color: white;
         font-size: 70px;
 
     }
     .buttons {
-        height: 59%;
+        height: 73%;
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -101,7 +106,7 @@ button {
     button {
         border-radius: 100%;
         border: none;
-        font-size: 50px;
+        font-size: 35px;
     }
     .number{
         background-color: rgb(52, 52, 52);
