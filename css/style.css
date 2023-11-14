@@ -95,6 +95,7 @@ button {
         background: #000;
         color: white;
         font-size: 70px;
+        vertical-align: bottom;
 
     }
     .buttons {
@@ -117,3 +118,9 @@ button {
         gap: 10px;
     }
 }
+
+
+
+
+
+

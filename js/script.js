@@ -1,145 +1,114 @@
-// On met tout le code dans ce evenement pour s'assurer qu'il ne s'execute avant la fin du chargement de la page
-
-
+// on met tout le code dans un evenement pour s'assurer qu'il ne s'execute qu'à la fin du chargement de la page
 document.addEventListener('DOMContentLoaded',()=>{
-    // on recupere les variables utiles
-    let bouton = document.querySelectorAll('button')
-    let screen = document.querySelector('#screen')
-    console.log(bouton)
-    // on crée la fonction pour le calcul
-    function calculator(nombreA, operator, nombreB){
-        // on oublie pas de convertir les nombres 
-        nombreA=nombreA*1
-        nombreB=nombreB*1
+    // on recupere toutes les variable necessaire
+    let screen      = document.querySelector('#screen')
+    let button      = document.querySelectorAll('button')
+
+    // on definie les variables necessaires
+    let firstNumber="",secondNumber="",operator=""
+
+    // on definie la fontion qui fera le calcul
+    function calculator(numberA,operator,numberB){
+        // on oublie pas de les convertir en number
+        numberA=numberA*1
+        numberB=numberB*1
+
         switch(operator){
             case '+':
-                return nombreA+nombreB
+                return numberA+numberB
                 break
             case '-':
-                return nombreA-nombreB
+                return numberA-numberB
                 break
             case '*':
-                return nombreA*nombreB
+                return numberA*numberB
                 break
             case '/':
-                return nombreA/nombreB
+                return numberA/numberB
                 break
-            default: Error;
+            default: Error
         }
     }
+    // Ajoutons un evenement sur tous les boutons
+    button.forEach(element =>{
+        // Recuperons l'attribut de chaque bouton pour que nous puissions reperer les valeurs
+        let value = element.getAttribute('value')
 
-    function calculatoExept(nombreA,operator){
-        nombreA=nombreA*1
-        switch(operator){
-            case'pourcent':
-                return nombreA/100
-                break
-            case 'racine':
-                return Math.sqrt(nombreA)
-            default: Error;   
+        element.addEventListener('click',()=>{
+            // Essayons d'initialiser la calculatrice
+            if(value==="C"){
+                firstNumber  = ''
+                secondNumber = ''
+                operator     = ''
+                screen.textContent = 0
 
-        }
-    }
-    // on crée les variables necessaire
-    let firstNumber='', secondNumber='', operator =''
-    bouton.forEach(bouton => {
-        // on crée la variable value pour choisir dynamiquement les bouton
-        let value = bouton.getAttribute('value')
-
-
-        bouton.addEventListener('click',()=>{
-            // on doit programer les boutons C et AC pour arreter tout le temps la calculatrice
-            if(value ==='C'){
-                firstNumber        =''
-                secondNumber       =''
-                operator           =''
-                screen.textContent ='0'
-              
             }else{
-              
-                // on trouve 1er nombre et deuxieme nombre
-                if((value >= '0' && value <= '9')|| value=='.'){
-                    // ici on protege d'abord la calculatrice pour ne pas que l'utilisateur entre plusieurs fois la virgule
-                    if(value=='.' && (firstNumber.includes('.')|| secondNumber.includes('.'))){
+                // Trouvos le premier et deuxieme nombre
+                if(value >='0' && value <='9' || value=='.'){
+                    if(value=='.' &&(firstNumber.includes(".")||secondNumber.includes('.'))){
                         return
-                    }
-                    // ici on dit tant que l'operateur est vide , l'utilisateur entre le premier nombre, sinon l'utilisateur entre le deuxieme nombre
-                    else if(operator==''){
-                        firstNumber+=value
-                        screen.textContent= firstNumber
-                        
+                    } 
+                    if(operator==""){
+                        firstNumber +=value
+                        screen.textContent =firstNumber
                     }else{
-                        secondNumber+=value
-                        screen.textContent= secondNumber
-                    }
+                        secondNumber +=value
+                        screen.textContent =secondNumber
 
+                    }
+                }
+                //Trouvons l'operateur
+                else if(value=='+' || value=='-' || value=='*' || value=='/'){
+                    // On doit abolument verifier que l'utilisateur a fini d'entrée les deux nombre avant de faire le calcul
+                    if(firstNumber!='' && secondNumber!=''){
+                            // ici on stock le calcul dans la premiere variable pour que l'utilisateur puisse faire des calculs à l'infini
+                        firstNumber = calculator(firstNumber,operator,secondNumber)
+                        screen.textContent =firstNumber
+
+                        // on reinitialise la seconde variable
+                        secondNumber=''
+                        
+                    }
+                    // on definie l'operateir a la fin pour que le navigateur lise les autres instructions en premier, cela evite que les operateurs s'ecrasent quand on fait un calcul à l'infini
+                        operator=value
+                }
+                else if(value=='='){
+                    if(firstNumber!='' && secondNumber!=''){
+
+                        firstNumber = calculator(firstNumber,operator,secondNumber)
+                        screen.textContent =firstNumber
+                        secondNumber=''
+                        operator=""
+                    }
                     
 
                 }
-                //  Trouvons l'opeerateur
-                else if(value ==='+'|| value ==='-'||value ==='*'||value ==='/'){
-                    // on verifie bien que l'utilisateur a entré les deux nombre pour faire le calcul
-                    if(firstNumber!=='' && secondNumber!==''){
-                        // ici on met le calcul dans la premier variable pour permettre à l'utilisateur de faire un calcul à l'infini 
+                else if(value=='racine'){
+                    if(firstNumber !="" && secondNumber ==""){
+                        firstNumber=Math.sqrt(firstNumber)
+                        screen.textContent =firstNumber
+                    }else if(secondNumber!=''){
+                        secondNumber=Math.sqrt(secondNumber)
+                        screen.textContent = secondNumber
 
-                        firstNumber=calculator(firstNumber,operator,secondNumber)
-                        screen.textContent=firstNumber
-                        secondNumber=''
-                    }
-                    // ici on definie l'operateur bien après le calcul pour eviter des mauvaise interpretations si jamais l'utilisateur continuait le calcul avec les signes
-                    operator=value
-
-                }
-                else if(value==='='){
-                    if(firstNumber!=='' && secondNumber!==''){
-                        // ici on met le calcul dans la premier variable pour permettre à l'utilisateur de faire un calcul à l'infini 
-
-                        firstNumber=calculator(firstNumber,operator,secondNumber)
-                        screen.textContent=firstNumber
-                        secondNumber=''
-                        operator=''
-                    }
-                   
-                }
-                // voici le calcul pour le pourcentage
-                if(value==='pourcent'){
-                    if(firstNumber!==''&& operator===''){
-                        firstNumber= calculatoExept(firstNumber,value)
-                        screen.textContent=firstNumber
-                        
-                       
-                    }
-                    else if( operator!=='' && secondNumber !==""){
-                        secondNumber=calculatoExept(secondNumber,value)
-                        screen.textContent=secondNumber
 
                     }
                 }
-                if(value==='racine'){
-                    if(firstNumber!=='' && operator==""){
-                        firstNumber=calculatoExept(firstNumber,value)
-                        screen.textContent=firstNumber
-                    }else if(operator !=='' && secondNumber!==""){
-                        secondNumber=calculatoExept(secondNumber,value)
-                        screen.textContent=secondNumber
+                else if(value=='pourcent'){
+                    if(firstNumber !="" && secondNumber ==""){
+
+                        firstNumber=Math.floor(firstNumber)/100
+                        screen.textContent =firstNumber
+                    }else if(secondNumber!=''){
+                        secondNumber=Math.floor(secondNumber)/100
+                        screen.textContent = secondNumber
+
+
                     }
                 }
-               
-               
 
-               
-                console.log('Ceci est le premier nombre'+firstNumber)
-                console.log('Ceci est le deuxieme nombre'+secondNumber)
             }
-        } )
+        })
+
     })
 })
-
-
-
-
-
-
-
-
-
